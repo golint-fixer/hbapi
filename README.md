@@ -1,4 +1,4 @@
-# hbpi
+# hbpi [![Build Status](https://travis-ci.org/yukihir0/hbapi.svg?branch=master)](https://travis-ci.org/yukihir0/hbapi)
 
 "hbapi" is library for hatena bookmark api.
 
