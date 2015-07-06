@@ -2,7 +2,10 @@ package hbapi
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/jarcoal/httpmock"
+	"net/http"
+	"reflect"
 	"strconv"
 	"testing"
 )
@@ -146,6 +149,31 @@ func TestGetEntryInfo(t *testing.T) {
 		if info.Related[i].Eid != expected.Related[i].Eid {
 			t.Errorf("expected related eid %s, but got %s\n", expected.Related[i].Eid, info.Related[i].Eid)
 		}
+	}
+}
+
+func TestGetEntryInfoError(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	httpmock.RegisterResponder(
+		"GET",
+		"http://b.hatena.ne.jp/entry/json/?url=http%3A%2F%2Fdeveloper.hatena.ne.jp",
+		func(req *http.Request) (*http.Response, error) {
+			return nil, errors.New("internal server error")
+		},
+	)
+
+	input := "http://developer.hatena.ne.jp"
+	expected := HBEntryInfo{}
+
+	info, err := GetEntryInfo(input)
+	if err == nil {
+		t.Errorf("fail mock: %s\n", input)
+	}
+
+	if !reflect.DeepEqual(info, expected) {
+		t.Errorf("expected %#v, but got %#v\n", expected, info)
 	}
 }
 
