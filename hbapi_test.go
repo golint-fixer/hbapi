@@ -192,6 +192,33 @@ func TestGetBookmarkCount(t *testing.T) {
 
 	count, err := GetBookmarkCount(input)
 	if err != nil {
+		// TODO modify
+		t.Errorf("fail mock: %s\n", input)
+	}
+
+	if count != expected {
+		t.Errorf("expected count %d, but got %d\n", expected, count)
+	}
+}
+
+func TestGetBookmarkCountError(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	res := "0"
+	httpmock.RegisterResponder(
+		"GET",
+		"http://api.b.st-hatena.com/entry.count?url=http%3A%2F%2Fdeveloper.hatena.ne.jp",
+		func(req *http.Request) (*http.Response, error) {
+			return nil, errors.New("internal server error")
+		},
+	)
+
+	input := "http://developer.hatena.ne.jp"
+	expected, err := strconv.Atoi(res)
+
+	count, err := GetBookmarkCount(input)
+	if err == nil {
 		t.Errorf("fail mock: %s\n", input)
 	}
 
