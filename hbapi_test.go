@@ -262,3 +262,32 @@ func TestGetBookmarkCounts(t *testing.T) {
 		}
 	}
 }
+
+func TestGetBookmarkCountsError(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	httpmock.RegisterResponder(
+		"GET",
+		"http://api.b.st-hatena.com/entry.counts?url=https%3A%2F%2Fgithub.com&url=https%3A%2F%2Fbitbucket.org&url=http%3A%2F%2Fstackoverflow.com",
+		func(req *http.Request) (*http.Response, error) {
+			return nil, errors.New("internal server error")
+		},
+	)
+
+	input := []string{
+		"https://github.com",
+		"https://bitbucket.org",
+		"http://stackoverflow.com",
+	}
+	expected := map[string]int{}
+
+	counts, err := GetBookmarkCounts(input)
+	if err == nil {
+		t.Errorf("fail mock: %#v\n", input)
+	}
+
+	if !reflect.DeepEqual(counts, expected) {
+		t.Errorf("expected counts %#v, but got %#v\n", expected, counts)
+	}
+}
