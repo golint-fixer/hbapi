@@ -3,10 +3,10 @@ package hbapi
 // entry record in hatena bookmark entry information
 type HBEntry struct {
 	Title    string `json:"title"`
-	Count    string `json:"count"`
+	Count    int    `json:"count"`
 	Url      string `json:"url"`
 	EntryUrl string `json:"entry_url"`
-	Eid      string `json:"eid"`
+	Eid      int    `json:"eid"`
 }
 
 // bookmark record in hatena bookmark entry information

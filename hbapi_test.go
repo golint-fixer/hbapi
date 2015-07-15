@@ -17,10 +17,10 @@ func TestGetEntryInfo(t *testing.T) {
 	res := `
 {
 	"title":"\u306f\u3066\u306a",
-	"count":"5523",
+	"count":5523,
 	"url":"http://www.hatena.ne.jp/",
 	"entry_url":"http://b.hatena.ne.jp/entry/www.hatena.ne.jp/",
-	"eid":"370",
+	"eid":370,
 	"screenshot":"http://screenshot.hatena.ne.jp/images/200x150/c/2/6/b/d/f015f87fcf44a513f4744d853fe22504bc3.jpg",
 	"bookmarks":[
 		{
@@ -39,17 +39,17 @@ func TestGetEntryInfo(t *testing.T) {
 	"related":[
 		{
 			"title":"title01",
-			"count":"1",
+			"count":1,
 			"url":"http://url01.example.com",
 			"entry_url":"http://entry_url01.example.com",
-			"eid":"1"
+			"eid":1
 		},
 		{
 			"title":"title02",
-			"count":"2",
+			"count":2,
 			"url":"http://url02.example.com",
 			"entry_url":"http://entry_url02.example.com",
-			"eid":"2"
+			"eid":2
 		}
 	]
 }
@@ -75,7 +75,7 @@ func TestGetEntryInfo(t *testing.T) {
 
 	// Count
 	if info.Count != expected.Count {
-		t.Errorf("expected count %s, but got %s\n", expected.Count, info.Count)
+		t.Errorf("expected count %d, but got %d\n", expected.Count, info.Count)
 	}
 
 	// Url
@@ -90,7 +90,7 @@ func TestGetEntryInfo(t *testing.T) {
 
 	// Eid
 	if info.Eid != expected.Eid {
-		t.Errorf("expected eid %s, but got %s\n", expected.Eid, info.Eid)
+		t.Errorf("expected eid %d, but got %d\n", expected.Eid, info.Eid)
 	}
 
 	// Screenshot
@@ -132,7 +132,7 @@ func TestGetEntryInfo(t *testing.T) {
 
 		// Count
 		if info.Related[i].Count != expected.Related[i].Count {
-			t.Errorf("expected related count %s, but got %s\n", expected.Related[i].Count, info.Related[i].Count)
+			t.Errorf("expected related count %d, but got %d\n", expected.Related[i].Count, info.Related[i].Count)
 		}
 
 		// Url
@@ -147,7 +147,7 @@ func TestGetEntryInfo(t *testing.T) {
 
 		// Eid
 		if info.Related[i].Eid != expected.Related[i].Eid {
-			t.Errorf("expected related eid %s, but got %s\n", expected.Related[i].Eid, info.Related[i].Eid)
+			t.Errorf("expected related eid %d, but got %d\n", expected.Related[i].Eid, info.Related[i].Eid)
 		}
 	}
 }
@@ -192,7 +192,6 @@ func TestGetBookmarkCount(t *testing.T) {
 
 	count, err := GetBookmarkCount(input)
 	if err != nil {
-		// TODO modify
 		t.Errorf("fail mock: %s\n", input)
 	}
 
