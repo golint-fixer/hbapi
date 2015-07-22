@@ -1,15 +1,15 @@
 package hbapi
 
-// entry record in hatena bookmark entry information
+// HBEntry represents entry record.
 type HBEntry struct {
 	Title    string `json:"title"`
 	Count    int    `json:"count"`
-	Url      string `json:"url"`
-	EntryUrl string `json:"entry_url"`
+	URL      string `json:"url"`
+	EntryURL string `json:"entry_url"`
 	Eid      int    `json:"eid"`
 }
 
-// bookmark record in hatena bookmark entry information
+// HBBookmark represents bookamrk record.
 type HBBookmark struct {
 	User      string   `json:"user"`
 	Tags      []string `json:"tags"`
@@ -17,7 +17,7 @@ type HBBookmark struct {
 	Comment   string   `json:"comment"`
 }
 
-// harena bookmark entry information
+// HBEntryInfo represents entry info record.
 type HBEntryInfo struct {
 	HBEntry
 	Screenshot string       `json:"screenshot"`

@@ -1,4 +1,4 @@
-// "hbapi" is library for hatena bookmark api.
+// Package hbapi : library for hatena bookmark api.
 package hbapi
 
 import (
@@ -9,13 +9,14 @@ import (
 	"strconv"
 )
 
+// API Endpoint
 const (
-	ENTRY_INFO_API_URL   = "http://b.hatena.ne.jp/entry/json/"
-	ENTRY_COUNT_API_URL  = "http://api.b.st-hatena.com/entry.count"
-	ENTRY_COUNTS_API_URL = "http://api.b.st-hatena.com/entry.counts"
+	EntryInfoAPIURL   = "http://b.hatena.ne.jp/entry/json/"
+	EntryCountAPIURL  = "http://api.b.st-hatena.com/entry.count"
+	EntryCountsAPIURL = "http://api.b.st-hatena.com/entry.counts"
 )
 
-// call hatena bookmark entry information api
+// GetEntryInfo call hatena bookmark entry information api.
 func GetEntryInfo(target string) (HBEntryInfo, error) {
 	q, err := url.Parse(target)
 	if err != nil {
@@ -25,7 +26,7 @@ func GetEntryInfo(target string) (HBEntryInfo, error) {
 	v := url.Values{}
 	v.Set("url", q.String())
 
-	u, _ := url.Parse(ENTRY_INFO_API_URL)
+	u, _ := url.Parse(EntryInfoAPIURL)
 	u.RawQuery = v.Encode()
 
 	res, err := http.Get(u.String())
@@ -41,7 +42,7 @@ func GetEntryInfo(target string) (HBEntryInfo, error) {
 	return info, nil
 }
 
-// call hatena bookmark count api(single url)
+// GetBookmarkCount call hatena bookmark count api.
 func GetBookmarkCount(target string) (int, error) {
 	q, err := url.Parse(target)
 	if err != nil {
@@ -51,7 +52,7 @@ func GetBookmarkCount(target string) (int, error) {
 	v := url.Values{}
 	v.Set("url", q.String())
 
-	u, _ := url.Parse(ENTRY_COUNT_API_URL)
+	u, _ := url.Parse(EntryCountAPIURL)
 	u.RawQuery = v.Encode()
 
 	res, err := http.Get(u.String())
@@ -66,7 +67,7 @@ func GetBookmarkCount(target string) (int, error) {
 	return count, nil
 }
 
-// call hatena bookmark count api(multiple url)
+// GetBookmarkCounts call hatena bookmark count api.
 func GetBookmarkCounts(targets []string) (map[string]int, error) {
 	v := url.Values{}
 	for _, target := range targets {
@@ -77,7 +78,7 @@ func GetBookmarkCounts(targets []string) (map[string]int, error) {
 		v.Add("url", q.String())
 	}
 
-	u, _ := url.Parse(ENTRY_COUNTS_API_URL)
+	u, _ := url.Parse(EntryCountsAPIURL)
 	u.RawQuery = v.Encode()
 
 	res, err := http.Get(u.String())

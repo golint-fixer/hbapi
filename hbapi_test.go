@@ -3,11 +3,12 @@ package hbapi
 import (
 	"encoding/json"
 	"errors"
-	"github.com/jarcoal/httpmock"
 	"net/http"
 	"reflect"
 	"strconv"
 	"testing"
+
+	"github.com/jarcoal/httpmock"
 )
 
 func TestGetEntryInfo(t *testing.T) {
@@ -78,14 +79,14 @@ func TestGetEntryInfo(t *testing.T) {
 		t.Errorf("expected count %d, but got %d\n", expected.Count, info.Count)
 	}
 
-	// Url
-	if info.Url != expected.Url {
-		t.Errorf("expected url %s, but got %s\n", expected.Url, info.Url)
+	// URL
+	if info.URL != expected.URL {
+		t.Errorf("expected url %s, but got %s\n", expected.URL, info.URL)
 	}
 
-	// EntryUrl
-	if info.EntryUrl != expected.EntryUrl {
-		t.Errorf("expected entry_url %s, but got %s\n", expected.EntryUrl, info.EntryUrl)
+	// EntryURL
+	if info.EntryURL != expected.EntryURL {
+		t.Errorf("expected entry_url %s, but got %s\n", expected.EntryURL, info.EntryURL)
 	}
 
 	// Eid
@@ -99,14 +100,14 @@ func TestGetEntryInfo(t *testing.T) {
 	}
 
 	// Bookmarks
-	for i, _ := range expected.Bookmarks {
+	for i := range expected.Bookmarks {
 		// User
 		if info.Bookmarks[i].User != expected.Bookmarks[i].User {
 			t.Errorf("expected bookmarks user %s, but got %s\n", expected.Bookmarks[i].User, info.Bookmarks[i].User)
 		}
 
 		// Tags
-		for j, _ := range expected.Bookmarks[i].Tags {
+		for j := range expected.Bookmarks[i].Tags {
 			if info.Bookmarks[i].Tags[j] != expected.Bookmarks[i].Tags[j] {
 				t.Errorf("expected bookmarks tags %s, but got %s\n", expected.Bookmarks[i].Tags[j], info.Bookmarks[i].Tags[j])
 			}
@@ -124,7 +125,7 @@ func TestGetEntryInfo(t *testing.T) {
 	}
 
 	// Related
-	for i, _ := range expected.Related {
+	for i := range expected.Related {
 		// Title
 		if info.Related[i].Title != expected.Related[i].Title {
 			t.Errorf("expected related title %s, but got %s\n", expected.Related[i].Title, info.Related[i].Title)
@@ -135,14 +136,14 @@ func TestGetEntryInfo(t *testing.T) {
 			t.Errorf("expected related count %d, but got %d\n", expected.Related[i].Count, info.Related[i].Count)
 		}
 
-		// Url
-		if info.Related[i].Url != expected.Related[i].Url {
-			t.Errorf("expected related url %s, but got %s\n", expected.Related[i].Url, info.Related[i].Url)
+		// URL
+		if info.Related[i].URL != expected.Related[i].URL {
+			t.Errorf("expected related url %s, but got %s\n", expected.Related[i].URL, info.Related[i].URL)
 		}
 
-		// EntryUrl
-		if info.Related[i].EntryUrl != expected.Related[i].EntryUrl {
-			t.Errorf("expected related entry_url %s, but got %s\n", expected.Related[i].EntryUrl, info.Related[i].EntryUrl)
+		// EntryURL
+		if info.Related[i].EntryURL != expected.Related[i].EntryURL {
+			t.Errorf("expected related entry_url %s, but got %s\n", expected.Related[i].EntryURL, info.Related[i].EntryURL)
 		}
 
 		// Eid
