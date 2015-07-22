@@ -5,6 +5,7 @@ before_install:
   - rm -rf ./sample
   - go get golang.org/x/tools/cmd/goimports
   - go get golang.org/x/tools/cmd/vet
+  - go get github.com/golang/lint/golint
   - go get github.com/jarcoal/httpmock
   - go get github.com/axw/gocov/gocov
   - go get github.com/mattn/goveralls
@@ -12,6 +13,7 @@ before_install:
 before_script:
   - goimports -l ./ | xargs -r false
   - go vet ./...
+  - golint ./... | xargs -r false
 script:
   - go test -v -covermode=count -coverprofile=coverage.out ./...
   - goveralls -coverprofile=coverage.out -service travis-ci
