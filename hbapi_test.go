@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/jarcoal/httpmock"
 )
@@ -289,5 +290,114 @@ func TestGetBookmarkCountsError(t *testing.T) {
 
 	if !reflect.DeepEqual(counts, expected) {
 		t.Errorf("expected counts %#v, but got %#v\n", expected, counts)
+	}
+}
+
+func TestGetFeed(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	res := `
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns="http://purl.org/rss/1.0/"
+ xmlns:content="http://purl.org/rss/1.0/modules/content/"
+ xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+ xmlns:opensearch="http://a9.com/-/spec/opensearchrss/1.0/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:hatena="http://www.hatena.ne.jp/info/xmlns#"
+ xmlns:media="http://search.yahoo.com/mrss"
+>
+  <channel rdf:about="http://b.hatena.ne.jp/yukihir0/">
+    <title>title</title>
+    <link>link</link>
+    <description>description</description>
+    <opensearch:startIndex>0</opensearch:startIndex>
+    <opensearch:itemsPerPage>20</opensearch:itemsPerPage>
+    <opensearch:totalResults>12345</opensearch:totalResults>
+    <items>
+      <rdf:Seq>
+        <rdf:li rdf:resource="resource01" />
+      </rdf:Seq>
+    </items>
+  </channel>
+  <item rdf:about="about01">
+    <title>title01</title>
+    <link>link01</link>
+    <description>description01</description>
+    <content:encoded>content01</content:encoded>
+    <dc:creator>creator01</dc:creator>
+    <dc:date>2015-07-01T01:23:45+09:00</dc:date>
+		<dc:subject>subject01</dc:subject>
+    <taxo:topics>
+      <rdf:Bag>
+        <rdf:li resource="/search/tag?q=subject01" />
+      </rdf:Bag>
+    </taxo:topics>
+    <hatena:bookmarkcount>111</hatena:bookmarkcount>
+  </item>
+	</rdf:RDF>
+	`
+
+	httpmock.RegisterResponder(
+		"GET",
+		"http://b.hatena.ne.jp/yukihir0/rss",
+		httpmock.NewStringResponder(200, res))
+
+	input := "yukihir0"
+	params := NewHBFeedParams(input)
+	expected := HBFeed{}
+	expected.Title = "title"
+	expected.Link = "link"
+	expected.Description = "description"
+	expected.StartIndex = 0
+	expected.ItemsPerPage = 20
+	expected.TotalResults = 12345
+	item := HBFeedItem{}
+	item.Title = "title01"
+	item.Link = "link01"
+	item.Description = "description01"
+	item.Content = "content01"
+	item.Creator = "creator01"
+	date, _ := time.Parse(time.RFC3339, "2015-07-01T01:23:45+09:00")
+	item.Date = date
+	item.BookmarkCount = 111
+	item.Subject = []string{"subject01"}
+	expected.Items = append(expected.Items, item)
+
+	feed, err := GetFeed(params)
+	if err != nil {
+		t.Errorf("fail mock: %#v\n", input)
+	}
+
+	if !reflect.DeepEqual(feed, expected) {
+		t.Errorf("expected feed %#v, but got %#v\n", expected, feed)
+	}
+}
+
+func TestGetFeedError(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	httpmock.RegisterResponder(
+		"GET",
+		"http://b.hatena.ne.jp/yukihir0/rss",
+		func(req *http.Request) (*http.Response, error) {
+			return nil, errors.New("internal server error")
+		},
+	)
+
+	input := "yukihir0"
+	params := NewHBFeedParams(input)
+	expected := HBFeed{}
+
+	feed, err := GetFeed(params)
+	if err == nil {
+		t.Errorf("fail mock: %#v\n", input)
+	}
+
+	if !reflect.DeepEqual(feed, expected) {
+		t.Errorf("expected feed %#v, but got %#v\n", expected, feed)
 	}
 }
