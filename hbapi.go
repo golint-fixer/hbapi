@@ -108,47 +108,54 @@ func GetFeed(params HBFeedParams) (HBFeed, error) {
 	}
 
 	channel := feed.Channels[0]
-	extensions := channel.Extensions["http://purl.org/rss/1.0/"]["channel"][0]
+	opensearch := channel.Extensions["http://a9.com/-/spec/opensearchrss/1.0/"]
 
 	hbf := HBFeed{}
 	hbf.Title = channel.Title
 	hbf.Link = channel.Links[0].Href
 	hbf.Description = channel.Description
-
-	if extensions.Childrens["startIndex"] != nil {
-		startIndex, _ := strconv.Atoi(extensions.Childrens["startIndex"][0].Value)
+	if opensearch["startIndex"] != nil {
+		startIndex, _ := strconv.Atoi(opensearch["startIndex"][0].Value)
 		hbf.StartIndex = startIndex
 	}
-	if extensions.Childrens["itemsPerPage"] != nil {
-		itemsPerPage, _ := strconv.Atoi(extensions.Childrens["itemsPerPage"][0].Value)
+	if opensearch["itemsPerPage"] != nil {
+		itemsPerPage, _ := strconv.Atoi(opensearch["itemsPerPage"][0].Value)
 		hbf.ItemsPerPage = itemsPerPage
 	}
-	if extensions.Childrens["totalResults"] != nil {
-		totalResults, _ := strconv.Atoi(extensions.Childrens["totalResults"][0].Value)
+	if opensearch["totalResults"] != nil {
+		totalResults, _ := strconv.Atoi(opensearch["totalResults"][0].Value)
 		hbf.TotalResults = totalResults
 	}
 
 	items := []HBFeedItem{}
 	for _, item := range channel.Items {
+		content := item.Extensions["http://purl.org/rss/1.0/modules/content/"]
+		dc := item.Extensions["http://purl.org/dc/elements/1.1/"]
+		hatena := item.Extensions["http://www.hatena.ne.jp/info/xmlns#"]
+
 		i := HBFeedItem{}
 		i.Title = item.Title
 		i.Link = item.Links[0].Href
 		i.Description = item.Description
-		e := item.Extensions["http://purl.org/rss/1.0/"]["item"][0]
-		if e.Childrens["encoded"] != nil {
-			i.Content = e.Childrens["encoded"][0].Value
+		if content["encoded"] != nil {
+			i.Content = content["encoded"][0].Value
 		}
-		if e.Childrens["creator"] != nil {
-			i.Creator = e.Childrens["creator"][0].Value
+		if dc["creator"] != nil {
+			i.Creator = dc["creator"][0].Value
 		}
-		date, _ := time.Parse(time.RFC3339, e.Childrens["date"][0].Value)
-		i.Date = date
-		bookmarkCount, _ := strconv.Atoi(e.Childrens["bookmarkcount"][0].Value)
-		i.BookmarkCount = bookmarkCount
-		for _, subject := range e.Childrens["subject"] {
-			i.Subject = append(i.Subject, subject.Value)
+		if dc["date"] != nil {
+			date, _ := time.Parse(time.RFC3339, dc["date"][0].Value)
+			i.Date = date
 		}
-
+		if hatena["bookmarkcount"] != nil {
+			bookmarkCount, _ := strconv.Atoi(hatena["bookmarkcount"][0].Value)
+			i.BookmarkCount = bookmarkCount
+		}
+		if dc["subject"] != nil {
+			for _, subject := range dc["subject"] {
+				i.Subject = append(i.Subject, subject.Value)
+			}
+		}
 		items = append(items, i)
 	}
 	hbf.Items = items
@@ -175,25 +182,33 @@ func GetFavoriteFeed(params HBFavoriteFeedParams) (HBFavoriteFeed, error) {
 
 	items := []HBFavoriteFeedItem{}
 	for _, item := range channel.Items {
+		content := item.Extensions["http://purl.org/rss/1.0/modules/content/"]
+		dc := item.Extensions["http://purl.org/dc/elements/1.1/"]
+		hatena := item.Extensions["http://www.hatena.ne.jp/info/xmlns#"]
+
 		i := HBFavoriteFeedItem{}
 		i.Title = item.Title
 		i.Link = item.Links[0].Href
 		i.Description = item.Description
-		e := item.Extensions["http://purl.org/rss/1.0/"]["item"][0]
-		if e.Childrens["encoded"] != nil {
-			i.Content = e.Childrens["encoded"][0].Value
+		if content["encoded"] != nil {
+			i.Content = content["encoded"][0].Value
 		}
-		if e.Childrens["creator"] != nil {
-			i.Creator = e.Childrens["creator"][0].Value
+		if dc["creator"] != nil {
+			i.Creator = dc["creator"][0].Value
 		}
-		date, _ := time.Parse(time.RFC3339, e.Childrens["date"][0].Value)
-		i.Date = date
-		bookmarkCount, _ := strconv.Atoi(e.Childrens["bookmarkcount"][0].Value)
-		i.BookmarkCount = bookmarkCount
-		for _, subject := range e.Childrens["subject"] {
-			i.Subject = append(i.Subject, subject.Value)
+		if dc["date"] != nil {
+			date, _ := time.Parse(time.RFC3339, dc["date"][0].Value)
+			i.Date = date
 		}
-
+		if hatena["bookmarkcount"] != nil {
+			bookmarkCount, _ := strconv.Atoi(hatena["bookmarkcount"][0].Value)
+			i.BookmarkCount = bookmarkCount
+		}
+		if dc["subject"] != nil {
+			for _, subject := range dc["subject"] {
+				i.Subject = append(i.Subject, subject.Value)
+			}
+		}
 		items = append(items, i)
 	}
 	hbf.Items = items
