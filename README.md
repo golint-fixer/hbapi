@@ -32,6 +32,26 @@ for url, count := range counts {
 }
 ```
 
+### Hatena Bookmark Feed
+```
+user := "..."
+params := hbapi.NewHBFeedParams(user)
+feed, _ := hbapi.GetFeed(params)
+for _, item := range feed.Items {
+	fmt.Println(item.Title)
+}
+```
+
+### Hatena Bookmark Favorite Feed
+```
+user := "..."
+params := hbapi.NewHBFavoriteFeedParams(user)
+feed, _ := hbapi.GetFavoriteFeed(params)
+for _, item := range feed.Items {
+	fmt.Println(item.Title)
+}
+```
+
 ## License
 
 Copyright &copy; 2015 yukihir0
