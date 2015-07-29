@@ -10,14 +10,16 @@ go get github.com/yukihir0/hbapi
 
 ## How to use
 
-### Hatena Bookmark Entry Information API
+### Use official API
+
+#### Hatena Bookmark Entry Information API
 ```
 url := "..."
 entry, _ := hbapi.GetEntryInfo(url)
 fmt.Println(entry.Count)
 ```
 
-### Hatena Bookmark Count API
+#### Hatena Bookmark Count API
 ```
 // single url
 url := "..."
@@ -32,7 +34,7 @@ for url, count := range counts {
 }
 ```
 
-### Hatena Bookmark Feed
+#### Hatena Bookmark Feed
 ```
 user := "..."
 params := hbapi.NewHBFeedParams(user)
@@ -42,7 +44,7 @@ for _, item := range feed.Items {
 }
 ```
 
-### Hatena Bookmark Favorite Feed
+#### Hatena Bookmark Favorite Feed
 ```
 user := "..."
 params := hbapi.NewHBFavoriteFeedParams(user)
