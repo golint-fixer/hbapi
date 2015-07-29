@@ -19,6 +19,19 @@ const (
 	EntryCountsAPIURL = "http://api.b.st-hatena.com/entry.counts"
 )
 
+// Xml Namespace
+const (
+	XmlnsContent    = "http://purl.org/rss/1.0/modules/content/"
+	XmlnsOpenSearch = "http://a9.com/-/spec/opensearchrss/1.0/"
+	XmlnsDC         = "http://purl.org/dc/elements/1.1/"
+	XmlnsHatena     = "http://www.hatena.ne.jp/info/xmlns#"
+)
+
+// HTTP timeout threashold
+const (
+	Timeout = 10
+)
+
 // GetEntryInfo call hatena bookmark entry information api.
 func GetEntryInfo(target string) (HBEntryInfo, error) {
 	q, err := url.Parse(target)
@@ -99,8 +112,7 @@ func GetBookmarkCounts(targets []string) (map[string]int, error) {
 
 // GetFeed get hatena bookmark feed.
 func GetFeed(params HBFeedParams) (HBFeed, error) {
-	timeout := 5
-	feed := rss.New(timeout, true, nil, nil)
+	feed := rss.New(Timeout, true, nil, nil)
 
 	req := params.GetRequest()
 	if err := feed.Fetch(req, nil); err != nil {
@@ -108,7 +120,7 @@ func GetFeed(params HBFeedParams) (HBFeed, error) {
 	}
 
 	channel := feed.Channels[0]
-	opensearch := channel.Extensions["http://a9.com/-/spec/opensearchrss/1.0/"]
+	opensearch := channel.Extensions[XmlnsOpenSearch]
 
 	hbf := HBFeed{}
 	hbf.Title = channel.Title
@@ -129,9 +141,9 @@ func GetFeed(params HBFeedParams) (HBFeed, error) {
 
 	items := []HBFeedItem{}
 	for _, item := range channel.Items {
-		content := item.Extensions["http://purl.org/rss/1.0/modules/content/"]
-		dc := item.Extensions["http://purl.org/dc/elements/1.1/"]
-		hatena := item.Extensions["http://www.hatena.ne.jp/info/xmlns#"]
+		content := item.Extensions[XmlnsContent]
+		dc := item.Extensions[XmlnsDC]
+		hatena := item.Extensions[XmlnsHatena]
 
 		i := HBFeedItem{}
 		i.Title = item.Title
@@ -165,8 +177,7 @@ func GetFeed(params HBFeedParams) (HBFeed, error) {
 
 // GetFavoriteFeed get hatena bookmark favorite feed.
 func GetFavoriteFeed(params HBFavoriteFeedParams) (HBFavoriteFeed, error) {
-	timeout := 5
-	feed := rss.New(timeout, true, nil, nil)
+	feed := rss.New(Timeout, true, nil, nil)
 
 	req := params.GetRequest()
 	if err := feed.Fetch(req, nil); err != nil {
@@ -182,9 +193,9 @@ func GetFavoriteFeed(params HBFavoriteFeedParams) (HBFavoriteFeed, error) {
 
 	items := []HBFavoriteFeedItem{}
 	for _, item := range channel.Items {
-		content := item.Extensions["http://purl.org/rss/1.0/modules/content/"]
-		dc := item.Extensions["http://purl.org/dc/elements/1.1/"]
-		hatena := item.Extensions["http://www.hatena.ne.jp/info/xmlns#"]
+		content := item.Extensions[XmlnsContent]
+		dc := item.Extensions[XmlnsDC]
+		hatena := item.Extensions[XmlnsHatena]
 
 		i := HBFavoriteFeedItem{}
 		i.Title = item.Title
