@@ -9,10 +9,11 @@ import (
 func main() {
 	user := "yukihir0"
 	params := hbapi.NewHBFeedParams(user)
-	params.Page = 0
-	//params.Tag = "golang"
-	//params.Date = "20150725"
-	//params.URL = "http://d.hatena.ne.jp"
+	//params.SetUser("yukihir0")
+	//params.SetPage(1)
+	//params.SetTag("golang")
+	//params.SetDate(time.Date(2015, 7, 29, 0, 0, 0, 0, time.UTC))
+	//params.SetURL("http://d.hatena.ne.jp")
 
 	feed, err := hbapi.GetFeed(params)
 	if err != nil {
