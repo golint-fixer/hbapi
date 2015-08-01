@@ -17,6 +17,7 @@ const (
 	EntryInfoAPIURL   = "http://b.hatena.ne.jp/entry/json/"
 	EntryCountAPIURL  = "http://api.b.st-hatena.com/entry.count"
 	EntryCountsAPIURL = "http://api.b.st-hatena.com/entry.counts"
+	HotEntryFeedURL   = "https://feeds.feedburner.com/hatena/b/hotentry"
 )
 
 // Xml Namespace
@@ -198,6 +199,57 @@ func GetFavoriteFeed(params FavoriteFeedParams) (FavoriteFeed, error) {
 		hatena := item.Extensions[XmlnsHatena]
 
 		i := FavoriteFeedItem{}
+		i.Title = item.Title
+		i.Link = item.Links[0].Href
+		i.Description = item.Description
+		if content["encoded"] != nil {
+			i.Content = content["encoded"][0].Value
+		}
+		if dc["creator"] != nil {
+			i.Creator = dc["creator"][0].Value
+		}
+		if dc["date"] != nil {
+			date, _ := time.Parse(time.RFC3339, dc["date"][0].Value)
+			i.Date = date
+		}
+		if hatena["bookmarkcount"] != nil {
+			bookmarkCount, _ := strconv.Atoi(hatena["bookmarkcount"][0].Value)
+			i.BookmarkCount = bookmarkCount
+		}
+		if dc["subject"] != nil {
+			for _, subject := range dc["subject"] {
+				i.Subject = append(i.Subject, subject.Value)
+			}
+		}
+		items = append(items, i)
+	}
+	hbf.Items = items
+
+	return hbf, nil
+}
+
+// GetHotEntryFeed get hatena bookmark hot entry feed.
+func GetHotEntryFeed() (HotEntryFeed, error) {
+	feed := rss.New(Timeout, true, nil, nil)
+
+	if err := feed.Fetch(HotEntryFeedURL, nil); err != nil {
+		return HotEntryFeed{}, err
+	}
+
+	channel := feed.Channels[0]
+
+	hbf := HotEntryFeed{}
+	hbf.Title = channel.Title
+	hbf.Link = channel.Links[0].Href
+	hbf.Description = channel.Description
+
+	items := []HotEntryFeedItem{}
+	for _, item := range channel.Items {
+		content := item.Extensions[XmlnsContent]
+		dc := item.Extensions[XmlnsDC]
+		hatena := item.Extensions[XmlnsHatena]
+
+		i := HotEntryFeedItem{}
 		i.Title = item.Title
 		i.Link = item.Links[0].Href
 		i.Description = item.Description

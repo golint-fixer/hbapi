@@ -54,6 +54,16 @@ for _, item := range feed.Items {
 }
 ```
 
+### Use unofficial API
+
+#### Hatena Bookmark Hot Entry Feed
+```
+feed, _ := hbapi.GetHotEntryFeed()
+for _, item := range feed.Items {
+  fmt.Println(item.Title)
+}
+```
+
 ## License
 
 Copyright &copy; 2015 yukihir0
