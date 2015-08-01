@@ -528,9 +528,6 @@ func TestGetHotEntryFeed(t *testing.T) {
     <title>title</title>
     <link>link</link>
     <description>description</description>
-    <opensearch:startIndex>0</opensearch:startIndex>
-    <opensearch:itemsPerPage>20</opensearch:itemsPerPage>
-    <opensearch:totalResults>12345</opensearch:totalResults>
     <items>
       <rdf:Seq>
         <rdf:li rdf:resource="resource01" />
