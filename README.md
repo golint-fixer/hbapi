@@ -37,7 +37,7 @@ for url, count := range counts {
 #### Hatena Bookmark Feed
 ```
 user := "..."
-params := hbapi.NewHBFeedParams(user)
+params := hbapi.NewFeedParams(user)
 feed, _ := hbapi.GetFeed(params)
 for _, item := range feed.Items {
 	fmt.Println(item.Title)
@@ -47,7 +47,7 @@ for _, item := range feed.Items {
 #### Hatena Bookmark Favorite Feed
 ```
 user := "..."
-params := hbapi.NewHBFavoriteFeedParams(user)
+params := hbapi.NewFavoriteFeedParams(user)
 feed, _ := hbapi.GetFavoriteFeed(params)
 for _, item := range feed.Items {
 	fmt.Println(item.Title)

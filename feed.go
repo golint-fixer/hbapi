@@ -4,19 +4,19 @@ import (
 	"time"
 )
 
-// HBFeed represents feed.
-type HBFeed struct {
+// Feed represents hatena bookmark feed.
+type Feed struct {
 	Title        string
 	Link         string
 	Description  string
 	StartIndex   int
 	ItemsPerPage int
 	TotalResults int
-	Items        []HBFeedItem
+	Items        []FeedItem
 }
 
-// HBFeedItem represents feed items.
-type HBFeedItem struct {
+// FeedItem represents hatena bookmark feed item.
+type FeedItem struct {
 	Title         string
 	Link          string
 	Description   string

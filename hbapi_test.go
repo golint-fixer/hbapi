@@ -62,7 +62,7 @@ func TestGetEntryInfo(t *testing.T) {
 		httpmock.NewStringResponder(200, res))
 
 	input := "http://developer.hatena.ne.jp"
-	expected := HBEntryInfo{}
+	expected := EntryInfo{}
 	json.Unmarshal([]byte(res), &expected)
 
 	info, err := GetEntryInfo(input)
@@ -167,7 +167,7 @@ func TestGetEntryInfoError(t *testing.T) {
 	)
 
 	input := "http://developer.hatena.ne.jp"
-	expected := HBEntryInfo{}
+	expected := EntryInfo{}
 
 	info, err := GetEntryInfo(input)
 	if err == nil {
@@ -346,15 +346,15 @@ func TestGetFeed(t *testing.T) {
 		httpmock.NewStringResponder(200, res))
 
 	input := "yukihir0"
-	params := NewHBFeedParams(input)
-	expected := HBFeed{}
+	params := NewFeedParams(input)
+	expected := Feed{}
 	expected.Title = "title"
 	expected.Link = "link"
 	expected.Description = "description"
 	expected.StartIndex = 0
 	expected.ItemsPerPage = 20
 	expected.TotalResults = 12345
-	item := HBFeedItem{}
+	item := FeedItem{}
 	item.Title = "title01"
 	item.Link = "link01"
 	item.Description = "description01"
@@ -389,8 +389,8 @@ func TestGetFeedError(t *testing.T) {
 	)
 
 	input := "yukihir0"
-	params := NewHBFeedParams(input)
-	expected := HBFeed{}
+	params := NewFeedParams(input)
+	expected := Feed{}
 
 	feed, err := GetFeed(params)
 	if err == nil {
@@ -455,12 +455,12 @@ func TestGetFavoriteFeed(t *testing.T) {
 		httpmock.NewStringResponder(200, res))
 
 	input := "yukihir0"
-	params := NewHBFavoriteFeedParams(input)
-	expected := HBFavoriteFeed{}
+	params := NewFavoriteFeedParams(input)
+	expected := FavoriteFeed{}
 	expected.Title = "title"
 	expected.Link = "link"
 	expected.Description = "description"
-	item := HBFavoriteFeedItem{}
+	item := FavoriteFeedItem{}
 	item.Title = "title01"
 	item.Link = "link01"
 	item.Description = "description01"
@@ -495,8 +495,8 @@ func TestGetFavoriteFeedError(t *testing.T) {
 	)
 
 	input := "yukihir0"
-	params := NewHBFavoriteFeedParams(input)
-	expected := HBFavoriteFeed{}
+	params := NewFavoriteFeedParams(input)
+	expected := FavoriteFeed{}
 
 	feed, err := GetFavoriteFeed(params)
 	if err == nil {

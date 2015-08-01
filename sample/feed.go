@@ -8,7 +8,7 @@ import (
 
 func main() {
 	user := "yukihir0"
-	params := hbapi.NewHBFeedParams(user)
+	params := hbapi.NewFeedParams(user)
 	//params.SetUser("yukihir0")
 	//params.SetPage(1)
 	//params.SetTag("golang")

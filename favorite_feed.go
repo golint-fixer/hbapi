@@ -4,16 +4,16 @@ import (
 	"time"
 )
 
-// HBFavoriteFeed represents favorite feed.
-type HBFavoriteFeed struct {
+// FavoriteFeed represents hatena bookmark favorite feed.
+type FavoriteFeed struct {
 	Title       string
 	Link        string
 	Description string
-	Items       []HBFavoriteFeedItem
+	Items       []FavoriteFeedItem
 }
 
-// HBFavoriteFeedItem represents favorite feed items.
-type HBFavoriteFeedItem struct {
+// FavoriteFeedItem represents hatena bookmark favorite feed items.
+type FavoriteFeedItem struct {
 	Title         string
 	Link          string
 	Description   string

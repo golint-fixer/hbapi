@@ -33,10 +33,10 @@ const (
 )
 
 // GetEntryInfo call hatena bookmark entry information api.
-func GetEntryInfo(target string) (HBEntryInfo, error) {
+func GetEntryInfo(target string) (EntryInfo, error) {
 	q, err := url.Parse(target)
 	if err != nil {
-		return HBEntryInfo{}, err
+		return EntryInfo{}, err
 	}
 
 	v := url.Values{}
@@ -47,13 +47,13 @@ func GetEntryInfo(target string) (HBEntryInfo, error) {
 
 	res, err := http.Get(u.String())
 	if err != nil {
-		return HBEntryInfo{}, err
+		return EntryInfo{}, err
 	}
 
 	body, _ := ioutil.ReadAll(res.Body)
 	defer res.Body.Close()
 
-	info := HBEntryInfo{}
+	info := EntryInfo{}
 	json.Unmarshal(body, &info)
 	return info, nil
 }
@@ -111,18 +111,18 @@ func GetBookmarkCounts(targets []string) (map[string]int, error) {
 }
 
 // GetFeed get hatena bookmark feed.
-func GetFeed(params HBFeedParams) (HBFeed, error) {
+func GetFeed(params FeedParams) (Feed, error) {
 	feed := rss.New(Timeout, true, nil, nil)
 
 	req := params.GetRequest()
 	if err := feed.Fetch(req, nil); err != nil {
-		return HBFeed{}, err
+		return Feed{}, err
 	}
 
 	channel := feed.Channels[0]
 	opensearch := channel.Extensions[XmlnsOpenSearch]
 
-	hbf := HBFeed{}
+	hbf := Feed{}
 	hbf.Title = channel.Title
 	hbf.Link = channel.Links[0].Href
 	hbf.Description = channel.Description
@@ -139,13 +139,13 @@ func GetFeed(params HBFeedParams) (HBFeed, error) {
 		hbf.TotalResults = totalResults
 	}
 
-	items := []HBFeedItem{}
+	items := []FeedItem{}
 	for _, item := range channel.Items {
 		content := item.Extensions[XmlnsContent]
 		dc := item.Extensions[XmlnsDC]
 		hatena := item.Extensions[XmlnsHatena]
 
-		i := HBFeedItem{}
+		i := FeedItem{}
 		i.Title = item.Title
 		i.Link = item.Links[0].Href
 		i.Description = item.Description
@@ -176,28 +176,28 @@ func GetFeed(params HBFeedParams) (HBFeed, error) {
 }
 
 // GetFavoriteFeed get hatena bookmark favorite feed.
-func GetFavoriteFeed(params HBFavoriteFeedParams) (HBFavoriteFeed, error) {
+func GetFavoriteFeed(params FavoriteFeedParams) (FavoriteFeed, error) {
 	feed := rss.New(Timeout, true, nil, nil)
 
 	req := params.GetRequest()
 	if err := feed.Fetch(req, nil); err != nil {
-		return HBFavoriteFeed{}, err
+		return FavoriteFeed{}, err
 	}
 
 	channel := feed.Channels[0]
 
-	hbf := HBFavoriteFeed{}
+	hbf := FavoriteFeed{}
 	hbf.Title = channel.Title
 	hbf.Link = channel.Links[0].Href
 	hbf.Description = channel.Description
 
-	items := []HBFavoriteFeedItem{}
+	items := []FavoriteFeedItem{}
 	for _, item := range channel.Items {
 		content := item.Extensions[XmlnsContent]
 		dc := item.Extensions[XmlnsDC]
 		hatena := item.Extensions[XmlnsHatena]
 
-		i := HBFavoriteFeedItem{}
+		i := FavoriteFeedItem{}
 		i.Title = item.Title
 		i.Link = item.Links[0].Href
 		i.Description = item.Description

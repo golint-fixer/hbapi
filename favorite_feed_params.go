@@ -10,17 +10,17 @@ const (
 	FavoriteFeedItemsPerPage = 25
 )
 
-// HBFavoriteFeedParams represents request parameters for get favorite feed.
-type HBFavoriteFeedParams struct {
+// FavoriteFeedParams represents request parameters for get hatena bookmark favorite feed.
+type FavoriteFeedParams struct {
 	user   string
 	until  time.Time
 	page   int
 	withMe bool
 }
 
-// NewHBFavoriteFeedParams initialize HBFavoriteFeedParams.
-func NewHBFavoriteFeedParams(user string) HBFavoriteFeedParams {
-	params := HBFavoriteFeedParams{
+// NewFavoriteFeedParams initialize FavoriteFeedParams.
+func NewFavoriteFeedParams(user string) FavoriteFeedParams {
+	params := FavoriteFeedParams{
 		user:   user,
 		page:   0,
 		withMe: false,
@@ -29,7 +29,7 @@ func NewHBFavoriteFeedParams(user string) HBFavoriteFeedParams {
 }
 
 // GetRequest return request url for get favorite feed.
-func (params HBFavoriteFeedParams) GetRequest() string {
+func (params FavoriteFeedParams) GetRequest() string {
 	req := "http://b.hatena.ne.jp/" + params.user + "/favorite.rss"
 
 	// MEMO untilとofは同時に指定できない？
@@ -47,32 +47,32 @@ func (params HBFavoriteFeedParams) GetRequest() string {
 }
 
 // SetUser set user param.
-func (params *HBFavoriteFeedParams) SetUser(user string) {
+func (params *FavoriteFeedParams) SetUser(user string) {
 	if user != "" {
 		params.user = user
 	}
 }
 
 // SetPage set page param.
-func (params *HBFavoriteFeedParams) SetPage(page int) {
+func (params *FavoriteFeedParams) SetPage(page int) {
 	if page >= 0 {
 		params.page = page
 	}
 }
 
 // SetUntil set until param.
-func (params *HBFavoriteFeedParams) SetUntil(until time.Time) {
+func (params *FavoriteFeedParams) SetUntil(until time.Time) {
 	if !until.IsZero() {
 		params.until = until
 	}
 }
 
 // EnableWithMe set withMe param true.
-func (params *HBFavoriteFeedParams) EnableWithMe() {
+func (params *FavoriteFeedParams) EnableWithMe() {
 	params.withMe = true
 }
 
 // DisableWithMe set withMe param false.
-func (params *HBFavoriteFeedParams) DisableWithMe() {
+func (params *FavoriteFeedParams) DisableWithMe() {
 	params.withMe = false
 }

@@ -8,7 +8,7 @@ import (
 
 func main() {
 	user := "yukihir0"
-	params := hbapi.NewHBFavoriteFeedParams(user)
+	params := hbapi.NewFavoriteFeedParams(user)
 	//params.SetUser("yukihir0")
 	//params.SetPage(1)
 	//params.SetUntil(time.Now().Add(7 * 24 * -time.Hour))
