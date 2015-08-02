@@ -42,7 +42,7 @@ func (params FeedParams) GetRequest() string {
 
 	if !params.date.IsZero() {
 		// date format: yyyyMMdd
-		req += "&date=" + params.date.Format("20060702")
+		req += "&date=" + params.date.Format("20060102")
 	}
 
 	if params.url != "" {
