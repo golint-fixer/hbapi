@@ -64,6 +64,15 @@ for _, item := range feed.Items {
 }
 ```
 
+### Hatena Bookmark Search
+```
+query := "golang"
+params := hbapi.NewSearchFeedParams(query)
+feed, _ := hbapi.Search(params)
+for _, item := range feed.Items {
+  fmt.Println(item.Title)
+}
+```
 ## License
 
 Copyright &copy; 2015 yukihir0

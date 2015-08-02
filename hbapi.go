@@ -278,3 +278,54 @@ func GetHotEntryFeed() (HotEntryFeed, error) {
 
 	return hbf, nil
 }
+
+// Search search hatena bookmark.
+func Search(params SearchFeedParams) (SearchFeed, error) {
+	feed := rss.New(Timeout, true, nil, nil)
+
+	if err := feed.Fetch(params.GetRequest(), nil); err != nil {
+		return SearchFeed{}, err
+	}
+
+	channel := feed.Channels[0]
+
+	hbf := SearchFeed{}
+	hbf.Title = channel.Title
+	hbf.Link = channel.Links[0].Href
+	hbf.Description = channel.Description
+
+	items := []SearchFeedItem{}
+	for _, item := range channel.Items {
+		content := item.Extensions[XmlnsContent]
+		dc := item.Extensions[XmlnsDC]
+		hatena := item.Extensions[XmlnsHatena]
+
+		i := SearchFeedItem{}
+		i.Title = item.Title
+		i.Link = item.Links[0].Href
+		i.Description = item.Description
+		if content["encoded"] != nil {
+			i.Content = content["encoded"][0].Value
+		}
+		if dc["creator"] != nil {
+			i.Creator = dc["creator"][0].Value
+		}
+		if dc["date"] != nil {
+			date, _ := time.Parse(time.RFC3339, dc["date"][0].Value)
+			i.Date = date
+		}
+		if hatena["bookmarkcount"] != nil {
+			bookmarkCount, _ := strconv.Atoi(hatena["bookmarkcount"][0].Value)
+			i.BookmarkCount = bookmarkCount
+		}
+		if dc["subject"] != nil {
+			for _, subject := range dc["subject"] {
+				i.Subject = append(i.Subject, subject.Value)
+			}
+		}
+		items = append(items, i)
+	}
+	hbf.Items = items
+
+	return hbf, nil
+}
