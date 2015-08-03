@@ -21,8 +21,9 @@ func (t targetType) String() string {
 		return "title"
 	case targetText:
 		return "text"
+	default:
+		return ""
 	}
-	return ""
 }
 
 type sortType int
@@ -38,8 +39,9 @@ func (t sortType) String() string {
 		return "recent"
 	case sortPopular:
 		return "popular"
+	default:
+		return ""
 	}
-	return ""
 }
 
 type safeType int
@@ -55,8 +57,9 @@ func (t safeType) String() string {
 		return "on"
 	case safeOff:
 		return "off"
+	default:
+		return ""
 	}
-	return ""
 }
 
 // SearchFeedParams represents request parameters for hatena bookmark search.
