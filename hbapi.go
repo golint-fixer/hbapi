@@ -20,12 +20,24 @@ const (
 	HotEntryFeedURL   = "https://feeds.feedburner.com/hatena/b/hotentry"
 )
 
-// Xml Namespace
+// XML Namespace
 const (
-	XmlnsContent    = "http://purl.org/rss/1.0/modules/content/"
-	XmlnsOpenSearch = "http://a9.com/-/spec/opensearchrss/1.0/"
-	XmlnsDC         = "http://purl.org/dc/elements/1.1/"
-	XmlnsHatena     = "http://www.hatena.ne.jp/info/xmlns#"
+	XMLNSContent    = "http://purl.org/rss/1.0/modules/content/"
+	XMLNSOpenSearch = "http://a9.com/-/spec/opensearchrss/1.0/"
+	XMLNSDC         = "http://purl.org/dc/elements/1.1/"
+	XMLNSHatena     = "http://www.hatena.ne.jp/info/xmlns#"
+)
+
+// XML Node
+const (
+	XMLNodeStartIndex    = "startIndex"
+	XMLNodeItemsPerPage  = "itemsPerPage"
+	XMLNodeTotalResults  = "totalResults"
+	XMLNodeEncoded       = "encoded"
+	XMLNodeCreator       = "creator"
+	XMLNodeDate          = "date"
+	XMLNodeBookmarkCount = "bookmarkcount"
+	XMLNodeSubject       = "subject"
 )
 
 // HTTP timeout threashold
@@ -121,51 +133,51 @@ func GetFeed(params FeedParams) (Feed, error) {
 	}
 
 	channel := feed.Channels[0]
-	opensearch := channel.Extensions[XmlnsOpenSearch]
+	opensearch := channel.Extensions[XMLNSOpenSearch]
 
 	hbf := Feed{}
 	hbf.Title = channel.Title
 	hbf.Link = channel.Links[0].Href
 	hbf.Description = channel.Description
-	if opensearch["startIndex"] != nil {
-		startIndex, _ := strconv.Atoi(opensearch["startIndex"][0].Value)
+	if opensearch[XMLNodeStartIndex] != nil {
+		startIndex, _ := strconv.Atoi(opensearch[XMLNodeStartIndex][0].Value)
 		hbf.StartIndex = startIndex
 	}
-	if opensearch["itemsPerPage"] != nil {
-		itemsPerPage, _ := strconv.Atoi(opensearch["itemsPerPage"][0].Value)
+	if opensearch[XMLNodeItemsPerPage] != nil {
+		itemsPerPage, _ := strconv.Atoi(opensearch[XMLNodeItemsPerPage][0].Value)
 		hbf.ItemsPerPage = itemsPerPage
 	}
-	if opensearch["totalResults"] != nil {
-		totalResults, _ := strconv.Atoi(opensearch["totalResults"][0].Value)
+	if opensearch[XMLNodeTotalResults] != nil {
+		totalResults, _ := strconv.Atoi(opensearch[XMLNodeTotalResults][0].Value)
 		hbf.TotalResults = totalResults
 	}
 
 	items := []FeedItem{}
 	for _, item := range channel.Items {
-		content := item.Extensions[XmlnsContent]
-		dc := item.Extensions[XmlnsDC]
-		hatena := item.Extensions[XmlnsHatena]
+		content := item.Extensions[XMLNSContent]
+		dc := item.Extensions[XMLNSDC]
+		hatena := item.Extensions[XMLNSHatena]
 
 		i := FeedItem{}
 		i.Title = item.Title
 		i.Link = item.Links[0].Href
 		i.Description = item.Description
-		if content["encoded"] != nil {
-			i.Content = content["encoded"][0].Value
+		if content[XMLNodeEncoded] != nil {
+			i.Content = content[XMLNodeEncoded][0].Value
 		}
-		if dc["creator"] != nil {
-			i.Creator = dc["creator"][0].Value
+		if dc[XMLNodeCreator] != nil {
+			i.Creator = dc[XMLNodeCreator][0].Value
 		}
-		if dc["date"] != nil {
-			date, _ := time.Parse(time.RFC3339, dc["date"][0].Value)
+		if dc[XMLNodeDate] != nil {
+			date, _ := time.Parse(time.RFC3339, dc[XMLNodeDate][0].Value)
 			i.Date = date
 		}
-		if hatena["bookmarkcount"] != nil {
-			bookmarkCount, _ := strconv.Atoi(hatena["bookmarkcount"][0].Value)
+		if hatena[XMLNodeBookmarkCount] != nil {
+			bookmarkCount, _ := strconv.Atoi(hatena[XMLNodeBookmarkCount][0].Value)
 			i.BookmarkCount = bookmarkCount
 		}
-		if dc["subject"] != nil {
-			for _, subject := range dc["subject"] {
+		if dc[XMLNodeSubject] != nil {
+			for _, subject := range dc[XMLNodeSubject] {
 				i.Subject = append(i.Subject, subject.Value)
 			}
 		}
@@ -194,30 +206,30 @@ func GetFavoriteFeed(params FavoriteFeedParams) (FavoriteFeed, error) {
 
 	items := []FavoriteFeedItem{}
 	for _, item := range channel.Items {
-		content := item.Extensions[XmlnsContent]
-		dc := item.Extensions[XmlnsDC]
-		hatena := item.Extensions[XmlnsHatena]
+		content := item.Extensions[XMLNSContent]
+		dc := item.Extensions[XMLNSDC]
+		hatena := item.Extensions[XMLNSHatena]
 
 		i := FavoriteFeedItem{}
 		i.Title = item.Title
 		i.Link = item.Links[0].Href
 		i.Description = item.Description
-		if content["encoded"] != nil {
-			i.Content = content["encoded"][0].Value
+		if content[XMLNodeEncoded] != nil {
+			i.Content = content[XMLNodeEncoded][0].Value
 		}
-		if dc["creator"] != nil {
-			i.Creator = dc["creator"][0].Value
+		if dc[XMLNodeCreator] != nil {
+			i.Creator = dc[XMLNodeCreator][0].Value
 		}
-		if dc["date"] != nil {
-			date, _ := time.Parse(time.RFC3339, dc["date"][0].Value)
+		if dc[XMLNodeDate] != nil {
+			date, _ := time.Parse(time.RFC3339, dc[XMLNodeDate][0].Value)
 			i.Date = date
 		}
-		if hatena["bookmarkcount"] != nil {
-			bookmarkCount, _ := strconv.Atoi(hatena["bookmarkcount"][0].Value)
+		if hatena[XMLNodeBookmarkCount] != nil {
+			bookmarkCount, _ := strconv.Atoi(hatena[XMLNodeBookmarkCount][0].Value)
 			i.BookmarkCount = bookmarkCount
 		}
-		if dc["subject"] != nil {
-			for _, subject := range dc["subject"] {
+		if dc[XMLNodeSubject] != nil {
+			for _, subject := range dc[XMLNodeSubject] {
 				i.Subject = append(i.Subject, subject.Value)
 			}
 		}
@@ -245,30 +257,30 @@ func GetHotEntryFeed() (HotEntryFeed, error) {
 
 	items := []HotEntryFeedItem{}
 	for _, item := range channel.Items {
-		content := item.Extensions[XmlnsContent]
-		dc := item.Extensions[XmlnsDC]
-		hatena := item.Extensions[XmlnsHatena]
+		content := item.Extensions[XMLNSContent]
+		dc := item.Extensions[XMLNSDC]
+		hatena := item.Extensions[XMLNSHatena]
 
 		i := HotEntryFeedItem{}
 		i.Title = item.Title
 		i.Link = item.Links[0].Href
 		i.Description = item.Description
-		if content["encoded"] != nil {
-			i.Content = content["encoded"][0].Value
+		if content[XMLNodeEncoded] != nil {
+			i.Content = content[XMLNodeEncoded][0].Value
 		}
-		if dc["creator"] != nil {
-			i.Creator = dc["creator"][0].Value
+		if dc[XMLNodeCreator] != nil {
+			i.Creator = dc[XMLNodeCreator][0].Value
 		}
-		if dc["date"] != nil {
-			date, _ := time.Parse(time.RFC3339, dc["date"][0].Value)
+		if dc[XMLNodeDate] != nil {
+			date, _ := time.Parse(time.RFC3339, dc[XMLNodeDate][0].Value)
 			i.Date = date
 		}
-		if hatena["bookmarkcount"] != nil {
-			bookmarkCount, _ := strconv.Atoi(hatena["bookmarkcount"][0].Value)
+		if hatena[XMLNodeBookmarkCount] != nil {
+			bookmarkCount, _ := strconv.Atoi(hatena[XMLNodeBookmarkCount][0].Value)
 			i.BookmarkCount = bookmarkCount
 		}
-		if dc["subject"] != nil {
-			for _, subject := range dc["subject"] {
+		if dc[XMLNodeSubject] != nil {
+			for _, subject := range dc[XMLNodeSubject] {
 				i.Subject = append(i.Subject, subject.Value)
 			}
 		}
@@ -296,30 +308,30 @@ func Search(params SearchFeedParams) (SearchFeed, error) {
 
 	items := []SearchFeedItem{}
 	for _, item := range channel.Items {
-		content := item.Extensions[XmlnsContent]
-		dc := item.Extensions[XmlnsDC]
-		hatena := item.Extensions[XmlnsHatena]
+		content := item.Extensions[XMLNSContent]
+		dc := item.Extensions[XMLNSDC]
+		hatena := item.Extensions[XMLNSHatena]
 
 		i := SearchFeedItem{}
 		i.Title = item.Title
 		i.Link = item.Links[0].Href
 		i.Description = item.Description
-		if content["encoded"] != nil {
-			i.Content = content["encoded"][0].Value
+		if content[XMLNodeEncoded] != nil {
+			i.Content = content[XMLNodeEncoded][0].Value
 		}
-		if dc["creator"] != nil {
-			i.Creator = dc["creator"][0].Value
+		if dc[XMLNodeCreator] != nil {
+			i.Creator = dc[XMLNodeCreator][0].Value
 		}
-		if dc["date"] != nil {
-			date, _ := time.Parse(time.RFC3339, dc["date"][0].Value)
+		if dc[XMLNodeDate] != nil {
+			date, _ := time.Parse(time.RFC3339, dc[XMLNodeDate][0].Value)
 			i.Date = date
 		}
-		if hatena["bookmarkcount"] != nil {
-			bookmarkCount, _ := strconv.Atoi(hatena["bookmarkcount"][0].Value)
+		if hatena[XMLNodeBookmarkCount] != nil {
+			bookmarkCount, _ := strconv.Atoi(hatena[XMLNodeBookmarkCount][0].Value)
 			i.BookmarkCount = bookmarkCount
 		}
-		if dc["subject"] != nil {
-			for _, subject := range dc["subject"] {
+		if dc[XMLNodeSubject] != nil {
+			for _, subject := range dc[XMLNodeSubject] {
 				i.Subject = append(i.Subject, subject.Value)
 			}
 		}
