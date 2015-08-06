@@ -557,6 +557,7 @@ func TestGetHotEntryFeed(t *testing.T) {
 		"https://feeds.feedburner.com/hatena/b/hotentry",
 		httpmock.NewStringResponder(200, res))
 
+	params := NewHotEntryFeedParams()
 	expected := HotEntryFeed{}
 	expected.Title = "title"
 	expected.Link = "link"
@@ -573,7 +574,7 @@ func TestGetHotEntryFeed(t *testing.T) {
 	item.Subject = []string{"subject01"}
 	expected.Items = append(expected.Items, item)
 
-	feed, err := GetHotEntryFeed()
+	feed, err := GetHotEntryFeed(params)
 	if err != nil {
 		t.Error("fail mock\n")
 	}
@@ -595,9 +596,10 @@ func TestGetHotEntryFeedError(t *testing.T) {
 		},
 	)
 
+	params := NewHotEntryFeedParams()
 	expected := HotEntryFeed{}
 
-	feed, err := GetHotEntryFeed()
+	feed, err := GetHotEntryFeed(params)
 	if err == nil {
 		t.Error("fail mock\n")
 	}

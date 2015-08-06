@@ -58,7 +58,8 @@ for _, item := range feed.Items {
 
 #### Hatena Bookmark Hot Entry Feed
 ```
-feed, _ := hbapi.GetHotEntryFeed()
+params := hbapi.NewHotEntryFeedParams()
+feed, _ := hbapi.GetHotEntryFeed(params)
 for _, item := range feed.Items {
   fmt.Println(item.Title)
 }
