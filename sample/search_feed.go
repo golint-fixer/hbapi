@@ -21,7 +21,7 @@ func main() {
 	//params.SetDateBegin(time.Date(2015, 7, 1, 0, 0, 0, 0, time.UTC))
 	//params.SetDateEnd(time.Date(2015, 7, 15, 0, 0, 0, 0, time.UTC))
 
-	feed, err := hbapi.Search(params)
+	feed, err := hbapi.GetSearchFeed(params)
 	if err != nil {
 		panic(err)
 	}

@@ -675,7 +675,7 @@ func TestSearch(t *testing.T) {
 	expected.Items = append(expected.Items, item)
 
 	params := NewSearchFeedParams("golang")
-	feed, err := Search(params)
+	feed, err := GetSearchFeed(params)
 	if err != nil {
 		t.Error("fail mock\n")
 	}
@@ -700,7 +700,7 @@ func TestSearchError(t *testing.T) {
 	expected := SearchFeed{}
 
 	params := NewSearchFeedParams("golang")
-	feed, err := Search(params)
+	feed, err := GetSearchFeed(params)
 	if err == nil {
 		t.Error("fail mock\n")
 	}

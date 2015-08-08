@@ -133,8 +133,8 @@ func GetHotEntryFeed(params HotEntryFeedParams) (HotEntryFeed, error) {
 	return newHotEntryFeed(f), nil
 }
 
-// Search search hatena bookmark.
-func Search(params SearchFeedParams) (SearchFeed, error) {
+// GetSearchFeed search hatena bookmark.
+func GetSearchFeed(params SearchFeedParams) (SearchFeed, error) {
 	req := params.GetRequest()
 
 	p := newParser()
