@@ -1,6 +1,7 @@
 package hbapi
 
 import (
+	neturl "net/url"
 	"strconv"
 	"time"
 )
@@ -32,24 +33,26 @@ func NewFeedParams(user string) FeedParams {
 
 // GetRequest return request url for get hatena bookmark feed.
 func (params FeedParams) GetRequest() string {
-	req := "http://b.hatena.ne.jp/" + params.user + "/rss"
-
-	req += "?of=" + strconv.Itoa(FeedItemsPerPage*params.page)
+	query := neturl.Values{}
+	query.Set("of", strconv.Itoa(FeedItemsPerPage*params.page))
 
 	if params.tag != "" {
-		req += "&tag=" + params.tag
+		query.Set("tag", params.tag)
 	}
 
 	if !params.date.IsZero() {
 		// date format: yyyyMMdd
-		req += "&date=" + params.date.Format("20060102")
+		query.Set("date", params.date.Format("20060102"))
 	}
 
 	if params.url != "" {
-		req += "&url=" + params.url
+		query.Set("url", params.url)
 	}
 
-	return req
+	url, _ := neturl.Parse("http://b.hatena.ne.jp/" + params.user + "/rss")
+	url.RawQuery = query.Encode()
+
+	return url.String()
 }
 
 // SetUser set user param.

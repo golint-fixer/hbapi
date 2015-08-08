@@ -655,7 +655,7 @@ func TestSearch(t *testing.T) {
 
 	httpmock.RegisterResponder(
 		"GET",
-		"http://b.hatena.ne.jp/search/text?q=golang&sort=recent&users=3&safe=on&mode=rss",
+		"http://b.hatena.ne.jp/search/text?mode=rss&q=golang&safe=on&sort=recent&users=3",
 		httpmock.NewStringResponder(200, res))
 
 	expected := SearchFeed{}

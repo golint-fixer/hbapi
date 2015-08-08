@@ -1,6 +1,7 @@
 package hbapi
 
 import (
+	neturl "net/url"
 	"strconv"
 	"time"
 )
@@ -30,20 +31,22 @@ func NewFavoriteFeedParams(user string) FavoriteFeedParams {
 
 // GetRequest return request url for get favorite feed.
 func (params FavoriteFeedParams) GetRequest() string {
-	req := "http://b.hatena.ne.jp/" + params.user + "/favorite.rss"
+	query := neturl.Values{}
 
-	// MEMO untilとofは同時に指定できない？
 	if !params.until.IsZero() {
-		req += "?until=" + strconv.Itoa(int(params.until.Unix()))
+		query.Set("until", strconv.Itoa(int(params.until.Unix())))
 	} else {
-		req += "?of=" + strconv.Itoa(FavoriteFeedItemsPerPage*params.page)
+		query.Set("of", strconv.Itoa(FavoriteFeedItemsPerPage*params.page))
 	}
 
 	if params.withMe {
-		req += "&with_me=1"
+		query.Set("with_me", "1")
 	}
 
-	return req
+	url, _ := neturl.Parse("http://b.hatena.ne.jp/" + params.user + "/favorite.rss")
+	url.RawQuery = query.Encode()
+
+	return url.String()
 }
 
 // SetUser set user param.

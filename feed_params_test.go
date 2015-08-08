@@ -52,7 +52,7 @@ func TestFeedParamsGetRequestWithDate(t *testing.T) {
 	params := NewFeedParams("yukihir0")
 	params.SetDate(time.Date(2015, time.August, 1, 12, 34, 56, 0, time.UTC))
 	actual := params.GetRequest()
-	expected := "http://b.hatena.ne.jp/yukihir0/rss?of=0&date=20150801"
+	expected := "http://b.hatena.ne.jp/yukihir0/rss?date=20150801&of=0"
 
 	if actual != expected {
 		t.Errorf("expected %s, but got %s\n", expected, actual)
@@ -63,7 +63,7 @@ func TestFeedParamsGetRequestWithURL(t *testing.T) {
 	params := NewFeedParams("yukihir0")
 	params.SetURL("http://d.hatena.ne.jp")
 	actual := params.GetRequest()
-	expected := "http://b.hatena.ne.jp/yukihir0/rss?of=0&url=http://d.hatena.ne.jp"
+	expected := "http://b.hatena.ne.jp/yukihir0/rss?of=0&url=http%3A%2F%2Fd.hatena.ne.jp"
 
 	if actual != expected {
 		t.Errorf("expected %s, but got %s\n", expected, actual)

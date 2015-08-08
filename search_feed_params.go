@@ -1,6 +1,7 @@
 package hbapi
 
 import (
+	neturl "net/url"
 	"strconv"
 	"time"
 )
@@ -87,28 +88,53 @@ func NewSearchFeedParams(query string) SearchFeedParams {
 
 // GetRequest return request url for search.
 func (params SearchFeedParams) GetRequest() string {
-	req := "http://b.hatena.ne.jp/search/"
+	/*
+		req := "http://b.hatena.ne.jp/search/"
 
-	req += params.target.String()
-	req += "?q=" + params.query
-	req += "&sort=" + params.sort.String()
-	req += "&users=" + strconv.Itoa(params.users)
-	req += "&safe=" + params.safe.String()
+		req += params.target.String()
+		req += "?q=" + params.query
+		req += "&sort=" + params.sort.String()
+		req += "&users=" + strconv.Itoa(params.users)
+		req += "&safe=" + params.safe.String()
+
+		if !params.dateEnd.IsZero() {
+			// yyyy-MM-dd
+			req += "&date_end=" + params.dateEnd.Format("2006-01-02")
+
+		}
+
+		if !params.dateBegin.IsZero() {
+			// yyyy-MM-dd
+			req += "&date_begin=" + params.dateBegin.Format("2006-01-02")
+		}
+
+		req += "&mode=rss"
+
+		return req
+	*/
+
+	query := neturl.Values{}
+	query.Set("q", params.query)
+	query.Set("sort", params.sort.String())
+	query.Set("users", strconv.Itoa(params.users))
+	query.Set("safe", params.safe.String())
 
 	if !params.dateEnd.IsZero() {
 		// yyyy-MM-dd
-		req += "&date_end=" + params.dateEnd.Format("2006-01-02")
-
+		query.Set("date_end", params.dateEnd.Format("2006-01-02"))
 	}
 
 	if !params.dateBegin.IsZero() {
 		// yyyy-MM-dd
-		req += "&date_begin=" + params.dateBegin.Format("2006-01-02")
+		query.Set("date_begin", params.dateBegin.Format("2006-01-02"))
 	}
 
-	req += "&mode=rss"
+	query.Set("mode", "rss")
 
-	return req
+	url, _ := neturl.Parse("http://b.hatena.ne.jp/search/" + params.target.String())
+	url.RawQuery = query.Encode()
+
+	return url.String()
 }
 
 // SetQuery set query.

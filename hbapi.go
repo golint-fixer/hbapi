@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"net/url"
+	neturl "net/url"
 	"strconv"
 )
 
@@ -17,19 +17,19 @@ const (
 )
 
 // GetEntryInfo call hatena bookmark entry information api.
-func GetEntryInfo(target string) (EntryInfo, error) {
-	q, err := url.Parse(target)
+func GetEntryInfo(url string) (EntryInfo, error) {
+	u, err := neturl.Parse(url)
 	if err != nil {
 		return EntryInfo{}, err
 	}
 
-	v := url.Values{}
-	v.Set("url", q.String())
+	query := neturl.Values{}
+	query.Set("url", u.String())
 
-	u, _ := url.Parse(EntryInfoAPIURL)
-	u.RawQuery = v.Encode()
+	req, _ := neturl.Parse(EntryInfoAPIURL)
+	req.RawQuery = query.Encode()
 
-	res, err := http.Get(u.String())
+	res, err := http.Get(req.String())
 	if err != nil {
 		return EntryInfo{}, err
 	}
@@ -43,19 +43,19 @@ func GetEntryInfo(target string) (EntryInfo, error) {
 }
 
 // GetBookmarkCount call hatena bookmark count api.
-func GetBookmarkCount(target string) (int, error) {
-	q, err := url.Parse(target)
+func GetBookmarkCount(url string) (int, error) {
+	u, err := neturl.Parse(url)
 	if err != nil {
 		return 0, err
 	}
 
-	v := url.Values{}
-	v.Set("url", q.String())
+	query := neturl.Values{}
+	query.Set("url", u.String())
 
-	u, _ := url.Parse(EntryCountAPIURL)
-	u.RawQuery = v.Encode()
+	req, _ := neturl.Parse(EntryCountAPIURL)
+	req.RawQuery = query.Encode()
 
-	res, err := http.Get(u.String())
+	res, err := http.Get(req.String())
 	if err != nil {
 		return 0, err
 	}
@@ -68,20 +68,20 @@ func GetBookmarkCount(target string) (int, error) {
 }
 
 // GetBookmarkCounts call hatena bookmark count api.
-func GetBookmarkCounts(targets []string) (map[string]int, error) {
-	v := url.Values{}
-	for _, target := range targets {
-		q, err := url.Parse(target)
+func GetBookmarkCounts(urls []string) (map[string]int, error) {
+	query := neturl.Values{}
+	for _, url := range urls {
+		u, err := neturl.Parse(url)
 		if err != nil {
 			return map[string]int{}, err
 		}
-		v.Add("url", q.String())
+		query.Add("url", u.String())
 	}
 
-	u, _ := url.Parse(EntryCountsAPIURL)
-	u.RawQuery = v.Encode()
+	req, _ := neturl.Parse(EntryCountsAPIURL)
+	req.RawQuery = query.Encode()
 
-	res, err := http.Get(u.String())
+	res, err := http.Get(req.String())
 	if err != nil {
 		return map[string]int{}, err
 	}
