@@ -99,5 +99,4 @@ func (p parser) Parse(req string) (UnifiedFeed, error) {
 	f.Items = items
 
 	return f, nil
-
 }
