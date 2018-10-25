@@ -6,7 +6,7 @@ before_install:
   - go get github.com/jteeuwen/go-pkg-rss
   - go get golang.org/x/tools/cmd/goimports
   - go get golang.org/x/tools/cmd/vet
-  - go get github.com/golang/lint/golint
+  - go get golang.org/x/lint/golint
   - go get github.com/jarcoal/httpmock
   - go get github.com/axw/gocov/gocov
   - go get github.com/mattn/goveralls
